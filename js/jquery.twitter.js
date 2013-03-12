@@ -1,10 +1,16 @@
 $(document).ready(function(){   
 
+
 function myTweets () {
 
   var numTweets  = 10;
-  var usersList  = '1';
-  var content    = '2';
+  var usersList  = null;
+  var content    = null;
+  var users      = new Array();
+
+  this.setNumTweets = function(n){
+    numTweets = n;
+  }
 
   this.setUsersList = function(l){
     usersList = l;
@@ -15,7 +21,6 @@ function myTweets () {
   }
 
   this.loadUsers = function(){
-    var _this = this;
 
     jQuery.ajax({
       type: "GET", 
@@ -27,42 +32,76 @@ function myTweets () {
           function()
           {
             var user = jQuery(this).find('name').text();
-            $(usersList).append('<div>'+user+'</div>');
+            addUsers(user);
           });     
-        addevent();
       } 
     });
 
   }
 
-  addevent = function(){
+  addUsers = function (user) {
+        $.ajax({
+            url: 'https://api.twitter.com/1/users/show.json/',
+            type: 'GET',
+            dataType: 'jsonp',
+            data: {
+                screen_name: user,
+                include_entities: true
+            },
+            success: function(data, textStatus) {
+              users[user] = data;
+              createBtnUser(user);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                alert('error');
+            }   
+ 
+        });
 
-    var _this = this;
+  }
 
-    $(usersList).children().each(function(i){
-            $(this).click(function(){
-                getTweets($(this).text());
-                activeuser(i)
-            });
-    });
-}
+  createBtnUser = function(user) {
 
-  activeuser = function(i) {
+        var btn = $('<div>', {
+            'data-logo': user
+        });
+
+        btn.append('<img src="'+users[user].profile_image_url+'"><span>'+users[user].name+'</span>');
+
+        btn.click(function(){
+            getTweets(user);
+            activeuser(user)
+        });
+
+        $(usersList).append(btn);
+
+  }
+
+  activeuser = function(u) {
     $(usersList).children().each(function(n){
-        if(n == i){
+        if($(this).data('logo') == u){
             $(this).addClass("active");
         }else{
             $(this).removeClass("active");
         }
     });
-}
+  }
 
+  viewProfile = function (user) {
+
+    $('#userinfo .profile-field').text(users[user].name);
+    $('#userinfo .screen-name').text('@'+user);
+    $('#userinfo .avatar').attr( 'src', users[user].profile_image_url.replace('normal','bigger') )
+
+  }
 
 
   getTweets = function(user) {
-   
 
-        $.ajax({
+    viewProfile(user);
+
+
+           $.ajax({
             url: 'http://api.twitter.com/1/statuses/user_timeline.json/',
             type: 'GET',
             dataType: 'jsonp',
@@ -72,7 +111,7 @@ function myTweets () {
                 count: numTweets,
                 include_entities: true
             },
-            success: function(data, textStatus, xhr) {
+            success: function(data, textStatus) {
                 $(content).text(' ');
  
                  var html = '<div class="tweet"><img src="IMG_SRC">TWEET_TEXT<div class="time">AGO</div>';

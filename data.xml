@@ -2,16 +2,20 @@
  <users>
   <user>
     <name>ua_yanukovych</name>
+    <login>ua_yanukovych</login>
   </user>
   <user>
     <name>MadonnaWorld</name>
+    <login>MadonnaWorld</login>
   </user>
-  <user>
+<!--   <user>
     <name>VanyaDutka</name>
+    <login>VanyaDutka</login>
   </user>
   <user>
     <name>matiishyn</name>
-  </user>
+    <login>matiishyn</login>
+  </user> -->
  </users>
 
 
