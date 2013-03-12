@@ -1,89 +1,98 @@
 $(document).ready(function(){   
 
-// var numTweets = 10;
-// var user      = 'MadonnaWorld';
-// var appendTo  = '#jstwitter';
+function myTweets () {
 
-// $('#left').append(user);
+  var numTweets  = 10;
+  var usersList  = '1';
+  var content    = '2';
 
-// $.ajax({
-//     url: 'http://api.twitter.com/1/statuses/user_timeline.json/',
-//     type: 'GET',
-//     dataType: 'jsonp',
-//         data: {
-//             screen_name: user,
-//             include_rts: true,
-//             count: numTweets,
-//             include_entities: true
-//         },
-//         success: function(data, textStatus, xhr) {
+  this.setUsersList = function(l){
+    usersList = l;
+  }
 
-//              var html = '<div class="tweet">TWEET_TEXT<div class="time">AGO</div></div>';
-     
-//              // append tweets into page
-//              for (var i = 0; i < data.length; i++) {
-//                 $(appendTo).append(
-//                     html.replace('TWEET_TEXT', data[i].text )
-//                         .replace(/USER/g, data[i].user.screen_name)
-//                         .replace('AGO', data[i].created_at )
-//                         .replace(/ID/g, data[i].id_str)
-//                 );
-//              }
+  this.setContent = function(c){
+    content = c;
+  }
 
-//         }   
-// });
-    
+  this.loadUsers = function(){
+    var _this = this;
 
-JQTWEET = {
-     
-    // Set twitter username, number of tweets & id/class to append tweets
-    user: '',
-    numTweets: 10,
-    appendTo: '#jstwitter',
- 
-    // core function of jqtweet
-    loadTweets: function(u) {
-        JQTWEET.user = u;
+    jQuery.ajax({
+      type: "GET", 
+      url: "data.xml",
+      dataType: "xml", 
+      success: function(xml) { 
+        var l = '';
+        jQuery(xml).find('user').each(
+          function()
+          {
+            var user = jQuery(this).find('name').text();
+            $(usersList).append('<div>'+user+'</div>');
+          });     
+        addevent();
+      } 
+    });
+
+  }
+
+  addevent = function(){
+
+    var _this = this;
+
+    $(usersList).children().each(function(i){
+            $(this).click(function(){
+                getTweets($(this).text());
+                activeuser(i)
+            });
+    });
+}
+
+  activeuser = function(i) {
+    $(usersList).children().each(function(n){
+        if(n == i){
+            $(this).addClass("active");
+        }else{
+            $(this).removeClass("active");
+        }
+    });
+}
+
+
+
+  getTweets = function(user) {
+   
 
         $.ajax({
             url: 'http://api.twitter.com/1/statuses/user_timeline.json/',
             type: 'GET',
             dataType: 'jsonp',
             data: {
-                screen_name: JQTWEET.user,
+                screen_name: user,
                 include_rts: true,
-                count: JQTWEET.numTweets,
+                count: numTweets,
                 include_entities: true
             },
             success: function(data, textStatus, xhr) {
-
-                $(JQTWEET.appendTo).text(' ');
+                $(content).text(' ');
  
                  var html = '<div class="tweet"><img src="IMG_SRC">TWEET_TEXT<div class="time">AGO</div>';
-         
-                 // append tweets into page
+
                  for (var i = 0; i < data.length; i++) {
-                    $(JQTWEET.appendTo).append(
-                        html.replace('TWEET_TEXT', JQTWEET.ify.clean(data[i].text) )
+                    $(content).append(
+                        html.replace('TWEET_TEXT', ify.clean(data[i].text) )
                             .replace(/USER/g, data[i].user.screen_name)
-                            .replace('AGO', JQTWEET.timeAgo(data[i].created_at) )
+                            .replace('AGO', timeAgo(data[i].created_at) )
                             .replace(/ID/g, data[i].id_str)
                             .replace('IMG_SRC', data[i].user.profile_image_url)
                     );
-                 }                  
+                 }
             }   
  
         });
-         
-    }, 
-     
-         
-    /**
-      * relative time calculator FROM TWITTER
-      * @param {string} twitter date string returned from Twitter API
-      * @return {string} relative time like "2 minutes ago"
-      */
-    timeAgo: function(dateString) {
+ 
+    }
+
+    timeAgo = function(dateString) {
         var rightNow = new Date();
         var then = new Date(dateString);
          
@@ -140,16 +149,9 @@ JQTWEET = {
         else {
             return "більше року тому";
         }
-    }, // timeAgo()
-     
-     
-    /**
-      * The Twitalinkahashifyer!
-      * http://www.dustindiaz.com/basement/ify.html
-      * Eg:
-      * ify.clean('your tweet text');
-      */
-    ify:  {
+    } // timeAgo()
+
+    ify =  {
       link: function(tweet) {
         return tweet.replace(/\b(((https*\:\/\/)|www\.)[^\"\']+?)(([!?,.\)]+)?(\s|$))/g, function(link, m1, m2, m3, m4) {
           var http = m2.match(/w/) ? 'http://' : '';
@@ -179,33 +181,15 @@ JQTWEET = {
         return this.hash(this.at(this.list(this.link(tweet))));
       }
     } // ify
- 
-     
-};
- 
- 
- JQTWEET.loadTweets('ua_yanukovych');
 
 
-function viewtweet (user) {
-    JQTWEET.loadTweets(user);
 }
 
-function activeuser (i) {
-    $('#left').children().each(function(n){
-        if(n == i){
-            $(this).addClass("active");
-        }else{
-            $(this).removeClass("active");
-        }
-    });
-}
+var tw = new myTweets();
 
-$('#left').children().each(function(i){
-            $(this).click(function(){
-                viewtweet($(this).text());
-                activeuser(i)
-            });
-});
+tw.setUsersList('#left');
+tw.setContent('#jstwitter');
+
+tw.loadUsers();
 
 });
