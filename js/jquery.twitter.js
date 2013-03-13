@@ -89,22 +89,35 @@ function myTweets () {
 
   viewProfile = function (user) {
 
+    var profile = users[user];
+
     $('#userinfo a').each(function(){
         $(this).attr("href","https://twitter.com/"+user);
     });
 
-    $('#userinfo .profile-field').text(users[user].name);
+    $('#userinfo .profile-field').text(profile.name);
     $('#userinfo .screen-name').text('@'+user);
-    $('#userinfo .avatar').attr( 'src', users[user].profile_image_url.replace('normal','bigger') );
-    $('#userinfo .bio').text(users[user].description);
-    $('#userinfo .location').text(users[user].location);
-    $('#userinfo .url').text(users[user].url).attr("href",users[user].url);
+    $('#userinfo .avatar').attr( 'src', profile.profile_image_url.replace('normal','bigger') );
 
-    $('body').css("background-image", "url("+users[user].profile_background_image_url+")");
+    $('#userinfo .bio').text((profile.description != null)?profile.description:'');
+    
+    $('#userinfo .location').text((profile.location != null)?profile.location:'');
+
+    var url = (profile.url!=null)?profile.url:'';
+    $('#userinfo .url').text(url).attr("href",url);
+    
+
+    $('body').css("background-image", "url("+profile.profile_background_image_url+")");
+
+    $('body').css("background-repeat", (profile.profile_background_tile?"repeat":"no-repeat"));
+
+    $('body').css("background-color", "#"+profile.profile_background_color);
   }
 
 
   getTweets = function(user, p) {
+
+    console.log(users[user]);
 
     $(content).prepend("<div id='loading'><img src='img/loading.gif' alt='loading'></div>");
 
