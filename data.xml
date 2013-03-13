@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
  <users>
   <user>
-    <name>ua_yanukovych</name>
+    <name>Yanukovych</name>
     <login>ua_yanukovych</login>
   </user>
   <user>
-    <name>MadonnaWorld</name>
+    <name>Madonna World</name>
     <login>MadonnaWorld</login>
   </user>
-<!--   <user>
-    <name>VanyaDutka</name>
+  <user>
+    <name>Vanya Dutka</name>
     <login>VanyaDutka</login>
   </user>
   <user>
-    <name>matiishyn</name>
+    <name>Matiishyn</name>
     <login>matiishyn</login>
-  </user> -->
+  </user>
  </users>
 
 

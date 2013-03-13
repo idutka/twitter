@@ -26,15 +26,15 @@ function myTweets () {
       type: "GET", 
       url: "data.xml",
       dataType: "xml", 
-      success: function(xml) { 
+      success: function(xml) {
         var l = '';
         jQuery(xml).find('user').each(
           function()
           {
-            var user = jQuery(this).find('name').text();
+            var user = jQuery(this).find('login').text();
             addUsers(user);
           });     
-      } 
+      }
     });
 
   }
@@ -53,9 +53,8 @@ function myTweets () {
               createBtnUser(user);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                alert('error');
-            }   
- 
+                console.log('error addUsers');
+            }
         });
 
   }
@@ -69,7 +68,8 @@ function myTweets () {
         btn.append('<img src="'+users[user].profile_image_url+'"><span>'+users[user].name+'</span>');
 
         btn.click(function(){
-            getTweets(user);
+            viewProfile(user);
+            getTweets(user,1);
             activeuser(user)
         });
 
@@ -89,16 +89,24 @@ function myTweets () {
 
   viewProfile = function (user) {
 
+    $('#userinfo a').each(function(){
+        $(this).attr("href","https://twitter.com/"+user);
+    });
+
     $('#userinfo .profile-field').text(users[user].name);
     $('#userinfo .screen-name').text('@'+user);
-    $('#userinfo .avatar').attr( 'src', users[user].profile_image_url.replace('normal','bigger') )
+    $('#userinfo .avatar').attr( 'src', users[user].profile_image_url.replace('normal','bigger') );
+    $('#userinfo .bio').text(users[user].description);
+    $('#userinfo .location').text(users[user].location);
+    $('#userinfo .url').text(users[user].url).attr("href",users[user].url);
 
+    $('body').css("background-image", "url("+users[user].profile_background_image_url+")");
   }
 
 
-  getTweets = function(user) {
+  getTweets = function(user, p) {
 
-    viewProfile(user);
+    $(content).prepend("<div id='loading'><img src='img/loading.gif' alt='loading'></div>");
 
 
            $.ajax({
@@ -109,10 +117,12 @@ function myTweets () {
                 screen_name: user,
                 include_rts: true,
                 count: numTweets,
+                page: p,
                 include_entities: true
             },
             success: function(data, textStatus) {
-                $(content).text(' ');
+                $(content).text('');
+                showPages(user,p);
  
                  var html = '<div class="tweet"><img src="IMG_SRC">TWEET_TEXT<div class="time">AGO</div>';
 
@@ -131,63 +141,57 @@ function myTweets () {
  
     }
 
+    showPages = function(user,p) {
+
+      $("#pag").text('');
+      $("#pag").attr('data-user', user);
+
+      var n = Math.ceil(users[user].statuses_count/numTweets);
+      if(n == 1) return true;
+      var pg = new Array();
+
+      var i = 1;
+      while(i <= n){
+ 
+      pg[i] = $('<span>');
+
+      if(i == p){pg[i].addClass('no-active')}
+
+      pg[i].text(i);
+
+      pg[i].click(function(){
+            getTweets($(this).parent().data('user'),$(this).text()*1);
+      });
+
+      $("#pag").append(pg[i]);
+
+      if(n > 15){
+        if(i > 2 && i < (p - 3)){ i = (p - 3); $("#pag").append(' ... ');}
+        if(i > (p + 1) && i < (n - 3)){ i = (n - 3); $("#pag").append(' ... ');}
+      }
+         i++;
+      };
+        
+    }
+// 12 (120)
+// 1 2 3 4 5 ... 10 11 12 13 14 .. 116 117 118 119 120
     timeAgo = function(dateString) {
-        var rightNow = new Date();
+
         var then = new Date(dateString);
-         
-        if ($.browser.msie) {
-            // IE can't parse these crazy Ruby dates
-            then = Date.parse(dateString.replace(/( \+)/, ' UTC$1'));
-        }
- 
-        var diff = rightNow - then;
- 
-        var second = 1000,
-        minute = second * 60,
-        hour = minute * 60,
-        day = hour * 24,
-        week = day * 7;
- 
-        if (isNaN(diff) || diff < 0) {
-            return ""; // return blank string if unknown
-        }
- 
-        if (diff < second * 2) {
-            // within 2 seconds
-            return "щойно";
-        }
- 
-        if (diff < minute) {
-            return Math.floor(diff / second) + " секунд тому";
-        }
- 
-        if (diff < minute * 2) {
-            return "бльзько хвилини тому";
-        }
- 
-        if (diff < hour) {
-            return Math.floor(diff / minute) + " хвилин тому";
-        }
- 
-        if (diff < hour * 2) {
-            return "бльзько години тому";
-        }
- 
-        if (diff < day) {
-            return  Math.floor(diff / hour) + " годин тому";
-        }
- 
-        if (diff > day && diff < day * 2) {
-            return "вчора";
-        }
- 
-        if (diff < day * 365) {
-            return Math.floor(diff / day) + " дня тому";
-        }
- 
-        else {
-            return "більше року тому";
-        }
+
+        var month = then.getMonth()+1;
+        var day = then.getDate();
+        var hour = then.getHours();
+        var minute = then.getMinutes();
+
+        var time = ((''+hour).length<2 ? '0' :'') + hour + ':' + ((''+minute).length<2 ? '0' :'') + minute;
+
+        var date = ((''+day).length<2 ? '0' : '') + day + '.' +
+                  ((''+month).length<2 ? '0' : '') + month + '.' +
+                  then.getFullYear();
+    
+        return date + ' в ' + time;
+        
     } // timeAgo()
 
     ify =  {

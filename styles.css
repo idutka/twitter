@@ -44,6 +44,8 @@ table {
 
 body {
 	background-image: url("img/background.png");
+	background-attachment: fixed;
+    font-family: "Helvetica Neue",Arial,sans-serif;
 }
 
 
@@ -51,19 +53,33 @@ body {
 	margin: 0 auto;
 	width: 920px;
 	box-shadow: 0 0 10px #000000;
+	position: relative;
 	background: url('img/wash-white-30.png');
 }
 
 #header {
 	background-image: url("img/sprite_bgs.png");
-	height: 40px;
-	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+    height: 40px;
+    position: absolute;
+    z-index: 10;
+	width: 100%;
+}
+
+#logo {
+    color: #CCCCCC;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 10px 50px;
+    background: url("img/logo.png") no-repeat left center;
+    background-size: 4%;
 }
 
 #main {
-	padding: 20px;
+	padding: 40px 20px 20px 20px;
 	overflow: hidden;
 }
+
 #left {
 	width: 300px;
 	float: left;
@@ -75,43 +91,61 @@ body {
 }
 
 .content {
-	border-radius: 5px;
-	padding: 10px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	padding: 15px 10px 10px 10px;
 	box-shadow: 0 0 1px #000;
 	background-color: #ffffff;
 }
 
 #left div {
 	cursor: pointer;
-	padding: 5px 5px 5px 60px;
+	padding: 5px 25px 5px 60px;
 	border-bottom: 1px solid #ccc;
 	overflow: hidden;
+	background-image: url('img/arrow.png'); 
+	background-position: center right;
+	background-repeat: no-repeat;
+	cursor: pointer;
 }
 
 #left div span{
-	color: #333333;
+	color: #AAA;
 	font-size: 20px;
 	padding-top: 12px;
 	float: left;
+	font-weight: bold;
 }
 
 #left div:HOVER {
-	background-color: #B8DAFF;
+	background-color: #F6F6F6;
+	/*background-image: url('img/arrow_active.png'); */
+}
+
+#left div:HOVER span{
+	color: #333333;
 }
 
 #left .active {
-	background-color: #96C9FF;
+	background-color: #EEEEEE;
+	background-image: url('img/arrow_active.png'); 
+}
+
+#left .active span{
+	color: #333333;
 }
 
 #left div img{
 	margin-left: -55px;
 	float: left;
 	border-radius: 5px;
+	width: 48px;
+	height: 48px;
 }
 
 #userinfo {
 	background-image: url('img/grey_header_web.png');
-	 background-color: #444444;
+	background-color: #444444;
     background-repeat: no-repeat;
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
     height: 260px;
@@ -132,9 +166,14 @@ body {
     position: relative;
     width: 73px;
     z-index: 5;
+    background: url('img/loading2.gif') no-repeat center center #FFFFFF;
 }
 
-.profile-card-inner {
+.profile-picture :HOVER {
+	box-shadow: 0 1px 1px rgba(255, 255, 255, 255.25);
+}
+
+.profile-card {
     float: none;
     margin: auto;
     position: relative;
@@ -143,7 +182,43 @@ body {
     color: #FFFFFF;
     font-size: 24px;
     font-family: Arial,sans-serif;
-    font-weight: bold;
+}
+
+.profile-field {
+	font-weight: bold;
+}
+
+.bio, .location, .url {
+	font-size: 14px;
+}
+
+.profile-card a {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.profile-card a:HOVER {
+	text-decoration: underline;
+}
+
+#pag {
+	text-align: center;
+}
+
+#pag span{
+	margin: 0 3px;
+	cursor: pointer;
+	color: #333333;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#pag span:HOVER{
+	text-decoration: underline;
+}
+
+#pag .no-active{
+	color: #999999;
 }
 
 
@@ -151,25 +226,23 @@ body {
 
 
 
-
-
-
-
-
-#jstwitter img {
-	width: 48px;
-	height: 48px;
-	border-radius: 5px;
-	float: left;
-	margin-left: -55px;
+#loading {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: url('img/wash-white-30.png');
+	text-align: center;
 }
+
+
 
 
 #jstwitter {
-    font-family: georgia;
     font-size: 15px;
     color: #333333;
-    padding: 10px;
+    margin: 10px;
+    min-height: 30px;
+    position: relative;
 }
  
 #jstwitter .tweet {
@@ -187,9 +260,18 @@ body {
 #jstwitter .tweet a:hover {
     text-decoration: underline;
 }
+
+#jstwitter .tweet img {
+	width: 48px;
+	height: 48px;
+	border-radius: 5px;
+	float: left;
+	margin-left: -55px;
+}
  
 #jstwitter .tweet .time {
     font-size: 10px;
     font-style: italic;
     color: #666666;
+    margin-top: 2px;
 }

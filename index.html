@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        <title>Test project</title>
+        <title>My Twitter application</title>
         <meta content="" name="description" />
         <meta content="" name="keywords" />
         <link type="text/css" href="styles.css" rel="stylesheet" />
@@ -13,10 +13,14 @@
     <body>
         <div id="wrapper">
             <div id="header">
+                <div id="logo">
+                    My Twitter application !!!
+                </div>
             </div>
             <div id="main">
-            <div id='left' class='content'>
-            </div>
+                <div id='left' class='content'>
+                </div>
+
             <div id='right' class='content'>
                 
                 <div id='userinfo'>
@@ -24,21 +28,20 @@
                         <img class="avatar" alt="" src="">
                     </a>
 
-                    <div class="profile-card-inner">
-                        <h1 class="fullname editable-group">
-                            <span class="profile-field"></span>
-                        </h1>
-    
-                        <h2 class="username">
-                            <span class="screen-name"></span>
-                        </h2>
+                    <div class="profile-card">
+                            <span class="profile-field">Profile</span><br />
+                            <a href="#" target="_blank"><span class="screen-name">info</span></a><br />
+                            <span class="bio"></span><br />
+                            <span class="location"></span><br />
+                            <a class="url" href="#" target="_blank"></a>
                     </div>
 
                 </div>
 
                 <div id='jstwitter'>
-                    тут будуть tweets
+                    <div id='loading'><img src='img/loading.gif' alt='loading' ></div>
                 </div>
+                <div id="pag"></div>
             </div>
 
             </div>
