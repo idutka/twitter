@@ -71,8 +71,10 @@ body {
     font-weight: bold;
     font-size: 20px;
     padding: 10px 50px;
-    background: url("img/logo.png") no-repeat left center;
-    background-size: 4%;
+    background-image: url("img/logo.png") ;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 3%;
 }
 
 #main {
